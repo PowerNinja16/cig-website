@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Collective Intelligence Group — OMEGA Division</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  :root {
+    --bg:          #080c0e;
+    --bg2:         #0d1417;
+    --bg3:         #111820;
+    --teal:        #00e5c8;
+    --teal-dim:    #00a896;
+    --teal-glow:   rgba(0,229,200,0.12);
+    --teal-glow2:  rgba(0,229,200,0.04);
+    --amber:       #f0a500;
+    --white:       #e8f0f2;
+    --muted:       #5a7a85;
+    --border:      rgba(0,229,200,0.14);
+    --border2:     rgba(0,229,200,0.06);
+    --font-mono:   'Share Tech Mono', monospace;
+    --font-ui:     'Rajdhani', sans-serif;
+    --font-code:   'Space Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font-ui);
+    font-size: 17px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── SCANLINE OVERLAY ─────────────────────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.07) 2px,
+      rgba(0,0,0,0.07) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: multiply;
+  }
+
+  /* ─── PAGE SYSTEM ──────────────────────────────────────────── */
+  .page { display: none; animation: fadeIn 0.4s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ─── NAV ──────────────────────────────────────────────────── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(8,12,14,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 2.5rem;
+    gap: 3rem;
+  }
+
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--teal);
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .nav-logo-mark {
+    width: 28px; height: 28px;
+    border: 1.5px solid var(--teal);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem;
+    position: relative;
+  }
+  .nav-logo-mark::before {
+    content: '';
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--teal);
+    animation: pulse-dot 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0.2rem;
+    list-style: none;
+    margin-left: auto;
+  }
+  .nav-links li button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links li button::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 1rem; right: 1rem;
+    height: 1px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+  .nav-links li button:hover,
+  .nav-links li button.active { color: var(--teal); }
+  .nav-links li button.active::after,
+  .nav-links li button:hover::after { transform: scaleX(1); }
+
+  .nav-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    animation: blink 1.6s step-end infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  /* ─── HERO ─────────────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    padding-top: 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border2) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border2) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6rem 3rem 6rem 5rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--teal);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--teal);
+  }
+
+  .hero-title {
+    font-family: var(--font-ui);
+    font-size: clamp(2.8rem, 5vw, 4.8rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  .hero-title span { color: var(--teal); }
+
+  .hero-subtitle-line {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--teal-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 2.2rem;
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    color: rgba(232,240,242,0.65);
+    max-width: 480px;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+
+  .hero-actions { display: flex; gap: 1rem; align-items: center; }
+
+  .btn-primary {
+    background: var(--teal);
+    color: var(--bg);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.85rem 2.2rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-primary:hover {
+    background: var(--white);
+    box-shadow: 0 0 24px rgba(0,229,200,0.4);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--teal);
+    font-family: var(--font-ui);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.85rem 2rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover {
+    border-color: var(--teal);
+    background: var(--teal-glow);
+  }
+
+  .hero-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ─── OMEGA RING DIAGRAM ────────────────────────────────────── */
+  .omega-diagram {
+    position: relative;
+    width: 420px;
+    height: 420px;
+  }
+
+  .omega-diagram svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .ring { transform-origin: 210px 210px; }
+  .ring-1 { animation: spin 18s linear infinite; }
+  .ring-2 { animation: spin 28s linear infinite reverse; }
+  .ring-3 { animation: spin 40s linear infinite; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .omega-core-pulse {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,200,0.3) 0%, transparent 70%);
+    animation: core-pulse 2s ease-in-out infinite;
+  }
+  @keyframes core-pulse {
+    0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%,-50%) scale(1.4); opacity: 0.5; }
+  }
+
+  .omega-label {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .omega-label-main {
+    font-family: var(--font-ui);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    display: block;
+  }
+  .omega-label-sub {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    display: block;
+    margin-top: 0.2rem;
+  }
+
+  .metric-bubble {
+    position: absolute;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 0.6rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  .metric-bubble strong {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--teal);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .metric-bubble.m1 { top: 8%; right: 0; }
+  .metric-bubble.m2 { bottom: 16%; right: -4%; }
+  .metric-bubble.m3 { bottom: 8%; left: 2%; }
+
+  /* ─── TICKER ───────────────────────────────────────────────── */
+  .ticker-bar {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    padding: 0.6rem 0;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-flex;
+    gap: 4rem;
+    animation: ticker 30s linear infinite;
+  }
+  @keyframes ticker { to { transform: translateX(-50%); } }
+  .ticker-item {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+  }
+  .ticker-item .val { color: var(--teal); margin-left: 0.4rem; }
+  .ticker-item .up { color: #4ade80; }
+  .ticker-item .dn { color: #f87171; }
+
+  /* ─── SECTION COMMONS ──────────────────────────────────────── */
+  section {
+    padding: 6rem 5rem;
+    position: relative;
+  }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--teal);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .section-label::before { content: '//'; color: var(--muted); }
+
+  .section-title {
+    font-family: var(--font-ui);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+    letter-spacing: -0.01em;
+  }
+  .section-title span { color: var(--teal); }
+
+  .section-body {
+    color: rgba(232,240,242,0.62);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 680px;
+    line-height: 1.9;
+  }
+
+  hr.section-rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* ─── STATS ROW ────────────────────────────────────────────── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .stat-cell {
+    padding: 2.5rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-cell::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+  }
+  .stat-cell:hover::before { transform: scaleX(1); }
+  .stat-num {
+    font-family: var(--font-ui);
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* ─── FEATURE GRID ─────────────────────────────────────────── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .feature-card {
+    background: var(--bg);
+    padding: 2.5rem;
+    transition: background 0.25s;
+  }
+  .feature-card:hover { background: var(--bg3); }
+  .feature-icon {
+    width: 44px; height: 44px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--teal);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+  .feature-title {
+    font-family: var(--font-ui);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.04em;
+  }
+  .feature-desc {
+    font-size: 0.9rem;
+    color: rgba(232,240,242,0.52);
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* ─── CHALLENGE CARDS ──────────────────────────────────────── */
+  .challenge-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 4rem;
+    margin-top: 4rem;
+    align-items: start;
+  }
+
+  .challenge-list { display: flex; flex-direction: column; gap: 1px; }
+
+  .challenge-item {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    padding: 1.8rem 2rem;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .challenge-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--teal);
+    transform: scaleY(0);
+    transition: transform 0.2s;
+  }
+  .challenge-item:hover { background: var(--bg3); border-color: var(--border); }
+  .challenge-item:hover::before { transform: scaleY(1); }
+
+  .challenge-edition {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+  }
+  .challenge-info h3 {
+    font-family: var(--font-ui);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .challenge-info p {
+    font-size: 0.85rem;
+    color: rgba(232,240,242,0.45);
+  }
+  .challenge-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .badge-open { color: var(--teal); border-color: var(--teal); }
+  .badge-upcoming { color: var(--amber); border-color: var(--amber); }
+  .badge-closed { color: var(--muted); border-color: var(--muted); }
+
+  .challenge-sidebar {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 2rem;
+  }
+  .sidebar-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .prize-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--border2);
+    font-size: 0.9rem;
+  }
+  .prize-item:last-of-type { border-bottom: none; }
+  .prize-label { color: rgba(232,240,242,0.55); font-weight: 300; }
+  .prize-value { color: var(--teal); font-family: var(--font-mono); font-size: 0.85rem; }
+
+  .register-box {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .input-field {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.8rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-field:focus { border-color: var(--teal); }
+  .input-field::placeholder { color: var(--muted); }
+  .btn-full {
+    width: 100%;
+    background: var(--teal);
+    color: var(--bg);
+    font-family: var(--font-ui);
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.4rem;
+  }
+  .btn-full:hover { background: var(--white); }
+
+  /* ─── OMEGA PAGE ───────────────────────────────────────────── */
+  .omega-hero {
+    min-height: 60vh;
+    padding-top: 64px;
+    display: flex;
+    align-items: center;
+    background: 
+      radial-gradient(ellipse 60% 60% at 80% 50%, rgba(0,229,200,0.05) 0%, transparent 60%),
+      var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .omega-hero-content {
+    padding: 4rem 5rem;
+    max-width: 760px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .spec-table {
+    margin-top: 3rem;
+    border: 1px solid var(--border);
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+  .spec-table tr { border-bottom: 1px solid var(--border2); }
+  .spec-table tr:last-child { border-bottom: none; }
+  .spec-table td {
+    padding: 1rem 1.5rem;
+    color: rgba(232,240,242,0.6);
+  }
+  .spec-table td:first-child {
+    color: var(--teal);
+    letter-spacing: 0.12em;
+    width: 220px;
+    border-right: 1px solid var(--border2);
+    background: var(--bg2);
+  }
+
+  .omega-perf-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    margin-top: 4rem;
+    border: 1px solid var(--border);
+  }
+  .perf-cell {
+    background: var(--bg);
+    padding: 2rem;
+    text-align: center;
+  }
+  .perf-cell:hover { background: var(--bg3); }
+  .perf-value {
+    font-family: var(--font-ui);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--teal);
+  }
+  .perf-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.18em;
+    margin-top: 0.4rem;
+    text-transform: uppercase;
+  }
+  .perf-bar {
+    height: 2px;
+    background: var(--border2);
+    margin: 1rem auto 0;
+    width: 60%;
+    position: relative;
+    overflow: hidden;
+  }
+  .perf-bar-fill {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    background: var(--teal);
+    animation: bar-grow 2s ease-out forwards;
+  }
+  @keyframes bar-grow { from { width: 0; } }
+
+  /* ─── ABOUT PAGE ───────────────────────────────────────────── */
+  .about-hero {
+    padding: 10rem 5rem 6rem;
+    background: 
+      radial-gradient(ellipse 50% 70% at 10% 50%, rgba(0,229,200,0.04) 0%, transparent 60%),
+      var(--bg);
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-top: 4rem;
+    align-items: start;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .team-card {
+    background: var(--bg);
+    padding: 2rem;
+    transition: background 0.2s;
+  }
+  .team-card:hover { background: var(--bg3); }
+  .team-avatar {
+    width: 52px; height: 52px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-ui);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: 0.05em;
+  }
+  .team-name {
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .team-role {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--teal);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+  .team-bio {
+    font-size: 0.85rem;
+    color: rgba(232,240,242,0.45);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* ─── TIMELINE ─────────────────────────────────────────────── */
+  .timeline {
+    margin-top: 2rem;
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .tl-item { position: relative; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.7rem;
+    top: 0.4rem;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 8px var(--teal);
+  }
+  .tl-year {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.3rem;
+  }
+  .tl-title {
+    font-family: var(--font-ui);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .tl-desc {
+    font-size: 0.88rem;
+    color: rgba(232,240,242,0.5);
+    font-weight: 300;
+  }
+
+  /* ─── FOOTER ───────────────────────────────────────────────── */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 3rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 2rem;
+  }
+  .footer-left { }
+  .footer-brand {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--teal);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+  }
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .footer-right {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    text-align: right;
+    letter-spacing: 0.1em;
+    line-height: 1.8;
+  }
+
+  /* ─── TERMINAL BLOCK ───────────────────────────────────────── */
+  .terminal {
+    background: #040708;
+    border: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    font-family: var(--font-code);
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: rgba(232,240,242,0.55);
+    margin-top: 2rem;
+    position: relative;
+  }
+  .terminal::before {
+    content: 'OMEGA SYSTEM STATUS';
+    position: absolute;
+    top: -0.6rem;
+    left: 1rem;
+    background: #040708;
+    padding: 0 0.5rem;
+    font-size: 0.6rem;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+  }
+  .terminal .t-green { color: #4ade80; }
+  .terminal .t-teal { color: var(--teal); }
+  .terminal .t-amber { color: var(--amber); }
+  .terminal .t-muted { color: var(--muted); }
+  .cursor { display: inline-block; width: 8px; height: 1em; background: var(--teal); animation: blink 1s step-end infinite; vertical-align: middle; margin-left: 2px; }
+
+  /* ─── PAGE HERO SHARED ─────────────────────────────────────── */
+  .page-hero-strip {
+    padding: 8rem 5rem 4rem;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-hero-strip::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 5rem; right: 5rem;
+    height: 1px;
+    background: linear-gradient(90deg, var(--teal), transparent);
+  }
+
+  /* ─── RESPONSIVE TWEAKS ────────────────────────────────────── */
+  @media (max-width: 900px) {
+    nav { padding: 0 1.5rem; gap: 1rem; }
+    .nav-status { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 5rem 1.5rem 4rem; }
+    footer { grid-template-columns: 1fr; }
+    .footer-right { text-align: left; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .challenge-layout { grid-template-columns: 1fr; }
+    .omega-perf-grid { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .about-hero, .page-hero-strip { padding: 8rem 1.5rem 3rem; }
+    .omega-hero-content { padding: 4rem 1.5rem; }
+  }
+</style>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/emailjs.min.js"></script>
+<script type="text/javascript">
+  (function(){
+    emailjs.init("aLzDsp1SCGw-LgW-z");  // Replace with your EmailJS Public Key
+  })();
+</script>
+</head>
+<body>
+
+<!-- ══════════════════════ NAV ══════════════════════════════════ -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home')">
+    <div class="nav-logo-mark"></div>
+    CIG
+  </a>
+  <ul class="nav-links">
+    <li><button onclick="showPage('home')" id="nav-home" class="active">Home</button></li>
+    <li><button onclick="showPage('about')" id="nav-about">About</button></li>
+    <li><button onclick="showPage('omega')" id="nav-omega">OMEGA Division</button></li>
+    <li><button onclick="showPage('challenge')" id="nav-challenge">Coding Challenge</button></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    OMEGA ONLINE
+  </div>
+</nav>
+
+<!-- ══════════════════════ HOME PAGE ════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-grid-bg"></div>
+
+    <div class="hero-left">
+      <div class="hero-eyebrow">Collective Intelligence Group</div>
+      <h1 class="hero-title">
+        Advancing the<br>
+        <span>Limits of</span><br>
+        Machine Scale
+      </h1>
+      <div class="hero-subtitle-line">OMEGA DIVISION — EST. 2017</div>
+      <p class="hero-desc">
+        CIG operates at the intersection of distributed cognition and high-performance computation. Our flagship system, OMEGA, represents a decade of architectural research — and we're only getting started.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showPage('challenge')">Enter the Challenge</button>
+        <button class="btn-ghost" onclick="showPage('omega')">Explore OMEGA →</button>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="omega-diagram">
+        <!-- SVG Ring Diagram -->
+        <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Outer ring -->
+          <g class="ring ring-1" filter="url(#glow)">
+            <circle cx="210" cy="210" r="178" fill="none" stroke="rgba(0,229,200,0.2)" stroke-width="1"/>
+            <circle cx="210" cy="32" r="4" fill="#00e5c8"/>
+            <circle cx="388" cy="210" r="3" fill="rgba(0,229,200,0.5)"/>
+            <circle cx="210" cy="388" r="2.5" fill="rgba(0,229,200,0.3)"/>
+            <circle cx="32" cy="210" r="3.5" fill="rgba(0,229,200,0.6)"/>
+            <line x1="210" y1="32" x2="388" y2="210" stroke="rgba(0,229,200,0.07)" stroke-width="1"/>
+            <line x1="32" y1="210" x2="210" y2="388" stroke="rgba(0,229,200,0.07)" stroke-width="1"/>
+          </g>
+
+          <!-- Mid ring -->
+          <g class="ring ring-2" filter="url(#glow)">
+            <circle cx="210" cy="210" r="130" fill="none" stroke="rgba(0,229,200,0.3)" stroke-width="1" stroke-dasharray="8 4"/>
+            <circle cx="210" cy="80" r="5" fill="#00e5c8"/>
+            <circle cx="340" cy="210" r="4" fill="#00a896"/>
+            <circle cx="80" cy="210" r="3" fill="rgba(0,229,200,0.7)"/>
+            <circle cx="210" cy="340" r="4.5" fill="rgba(0,229,200,0.4)"/>
+          </g>
+
+          <!-- Inner ring -->
+          <g class="ring ring-3">
+            <circle cx="210" cy="210" r="84" fill="none" stroke="rgba(0,229,200,0.4)" stroke-width="1.5"/>
+            <circle cx="210" cy="126" r="4" fill="#00e5c8" filter="url(#glow)"/>
+            <circle cx="294" cy="210" r="3" fill="#00e5c8"/>
+            <circle cx="210" cy="294" r="3.5" fill="rgba(0,229,200,0.5)"/>
+            <circle cx="126" cy="210" r="3" fill="#00e5c8"/>
+          </g>
+
+          <!-- Core circle -->
+          <circle cx="210" cy="210" r="46" fill="rgba(0,229,200,0.05)" stroke="rgba(0,229,200,0.6)" stroke-width="1.5" filter="url(#glow)"/>
+          <circle cx="210" cy="210" r="32" fill="rgba(0,229,200,0.08)" stroke="rgba(0,229,200,0.3)" stroke-width="1"/>
+
+          <!-- Tick marks -->
+          <g opacity="0.3" stroke="#00e5c8" stroke-width="1">
+            <line x1="210" y1="20" x2="210" y2="30"/>
+            <line x1="210" y1="390" x2="210" y2="400"/>
+            <line x1="20" y1="210" x2="30" y2="210"/>
+            <line x1="390" y1="210" x2="400" y2="210"/>
+          </g>
+        </svg>
+
+        <div class="omega-core-pulse"></div>
+        <div class="omega-label">
+          <span class="omega-label-main">Ω</span>
+          <span class="omega-label-sub">OMEGA-7 LIVE</span>
+        </div>
+
+        <div class="metric-bubble m1">
+          <strong>847</strong>
+          PFLOPS/s
+        </div>
+        <div class="metric-bubble m2">
+          <strong>99.97%</strong>
+          UPTIME
+        </div>
+        <div class="metric-bubble m3">
+          <strong>14.2B</strong>
+          PARAMS
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker-bar">
+    <div class="ticker-inner">
+      <span class="ticker-item">OMEGA BENCHMARK <span class="val up">↑ 312%</span></span>
+      <span class="ticker-item">CHALLENGE #18 <span class="val">OPEN</span></span>
+      <span class="ticker-item">PARTICIPANTS <span class="val">41,209</span></span>
+      <span class="ticker-item">UPTIME <span class="val up">99.97%</span></span>
+      <span class="ticker-item">COMPUTE NODES <span class="val">8,192</span></span>
+      <span class="ticker-item">CURRENT BENCHMARK <span class="val">3.1 EXAFLOPS</span></span>
+      <span class="ticker-item">LATEST WINNER <span class="val">[ REDACTED ]</span></span>
+      <span class="ticker-item">NEXT CHALLENGE <span class="val amber">IN 4 DAYS</span></span>
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item">OMEGA BENCHMARK <span class="val up">↑ 312%</span></span>
+      <span class="ticker-item">CHALLENGE #18 <span class="val">OPEN</span></span>
+      <span class="ticker-item">PARTICIPANTS <span class="val">41,209</span></span>
+      <span class="ticker-item">UPTIME <span class="val up">99.97%</span></span>
+      <span class="ticker-item">COMPUTE NODES <span class="val">8,192</span></span>
+      <span class="ticker-item">CURRENT BENCHMARK <span class="val">3.1 EXAFLOPS</span></span>
+      <span class="ticker-item">LATEST WINNER <span class="val">[ REDACTED ]</span></span>
+      <span class="ticker-item">NEXT CHALLENGE <span class="val amber">IN 4 DAYS</span></span>
+    </div>
+  </div>
+
+  <!-- MISSION -->
+  <section>
+    <div class="section-label">Mission</div>
+    <h2 class="section-title">Intelligence at <span>Planetary Scale</span></h2>
+    <p class="section-body">
+      Collective Intelligence Group was founded on a simple but audacious premise: that the most complex challenges facing civilization—climate modeling, drug discovery, logistical optimization at global scale—require computational architectures that don't yet exist. We build them. Our work at the OMEGA Division bridges distributed systems theory, machine learning infrastructure, and frontier research to create systems that outperform what any single processor, cluster, or cloud platform can deliver alone.
+    </p>
+
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-num">3.1<span style="font-size:1.2rem"> EF</span></div>
+        <div class="stat-label">Peak Compute</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">18</div>
+        <div class="stat-label">Weekly Challenges Run</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">41K+</div>
+        <div class="stat-label">Global Competitors</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">97</div>
+        <div class="stat-label">Research Publications</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <!-- FEATURES -->
+  <section>
+    <div class="section-label">Capabilities</div>
+    <h2 class="section-title">What CIG <span>Does</span></h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">HPC</div>
+        <div class="feature-title">High-Performance Computing</div>
+        <p class="feature-desc">OMEGA's architecture leverages heterogeneous node arrays — GPU, TPU, and custom ASIC — interconnected by our proprietary low-latency mesh fabric, delivering sustained petaflop throughput for real-world workloads.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">ML</div>
+        <div class="feature-title">Machine Learning Research</div>
+        <p class="feature-desc">Our ML Division publishes open research on scalable training infrastructure, novel optimizer architectures, and emergent reasoning benchmarks. Collaboration with universities across 14 countries.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">SIM</div>
+        <div class="feature-title">Simulation & Modeling</div>
+        <p class="feature-desc">From protein folding at atomic resolution to city-scale traffic optimization, OMEGA's simulation layer handles stochastic and deterministic workloads with reproducible precision.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">SYS</div>
+        <div class="feature-title">Distributed Systems Engineering</div>
+        <p class="feature-desc">CIG engineers design fault-tolerant, globally distributed pipelines that maintain consistency under adversarial network conditions — a core competency of the OMEGA platform.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">SEC</div>
+        <div class="feature-title">Secure Compute Environments</div>
+        <p class="feature-desc">All OMEGA workloads run within cryptographically isolated enclaves. Zero-trust networking, hardware attestation, and continuous audit trails ensure data sovereignty for all research partners.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">TAL</div>
+        <div class="feature-title">Talent & Community</div>
+        <p class="feature-desc">Through our Coding Challenges and open research programs, CIG cultivates a global community of engineers, researchers, and problem-solvers — the human layer behind OMEGA's breakthroughs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <div class="footer-brand">COLLECTIVE INTELLIGENCE GROUP</div>
+      <div class="footer-copy">© 2025 Collective Intelligence Group, Inc. All rights reserved. — OMEGA is a registered system designation of CIG.</div>
+    </div>
+    <div class="footer-right">
+      OMEGA-7 STATUS: <span style="color:var(--teal)">OPERATIONAL</span><br>
+      NODE COUNT: 8,192<br>
+      LAST SYNC: <span id="last-sync"></span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════ ABOUT PAGE ════════════════════════════ -->
+<div id="page-about" class="page">
+
+  <div class="about-hero">
+    <div class="section-label">About Us</div>
+    <h1 class="section-title" style="font-size:clamp(2.4rem,4vw,4rem); max-width: 720px;">
+      Built by Researchers.<br>Driven by <span>Curiosity</span>.
+    </h1>
+    <p class="section-body" style="margin-top: 1.5rem;">
+      Collective Intelligence Group was founded in 2017 by a coalition of computational scientists, systems engineers, and AI researchers who believed that the next era of discovery would require infrastructure that didn't yet exist. Seven years later, we've built it — and we're still building.
+    </p>
+  </div>
+
+  <section>
+    <div class="two-col">
+      <div>
+        <div class="section-label">Our Story</div>
+        <h2 class="section-title" style="font-size:1.9rem;">From a Blueprint<br>to a <span>Breakthrough</span></h2>
+        <p class="section-body" style="margin-top:1rem; font-size:0.95rem;">
+          CIG began as a research collective operating out of three universities simultaneously. Our founding team shared a dissatisfaction with the compute bottlenecks that were throttling scientific progress — not just in AI, but across genomics, climate science, and materials research. The vision was clear: build the system the research community actually needed.
+          <br><br>
+          OMEGA was initially conceived as a heterogeneous cluster experiment. Within two years, it had outpaced every academic supercomputer it was benchmarked against. That success attracted talent, funding, and an ever-growing roster of research partners. Today, OMEGA sits at the frontier of what is computationally possible.
+          <br><br>
+          We remain independent, research-first, and deeply committed to operating transparently at the edge of the field.
+        </p>
+      </div>
+      <div>
+        <div class="section-label">Milestones</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-year">2017</div>
+            <div class="tl-title">CIG Founded</div>
+            <div class="tl-desc">Three founding researchers launch the Collective Intelligence Group as an independent research collective.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2018</div>
+            <div class="tl-title">OMEGA v1 Online</div>
+            <div class="tl-desc">First full OMEGA architecture goes live. Benchmark performance exceeds initial projections by 240%.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2020</div>
+            <div class="tl-title">Series B Funding</div>
+            <div class="tl-desc">$340M raised to expand OMEGA's node infrastructure and launch the first international research partnerships.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2022</div>
+            <div class="tl-title">OMEGA-5 Sets World Record</div>
+            <div class="tl-desc">OMEGA-5 achieves top-ranked benchmark performance across NLP, strategy simulation, and adversarial reasoning tasks.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2023</div>
+            <div class="tl-title">Coding Challenge Program Launched</div>
+            <div class="tl-desc">The Weekly Coding Challenge goes public. Over 8,000 participants in the first month.</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-year">2025</div>
+            <div class="tl-title">OMEGA-7 — Current Generation</div>
+            <div class="tl-desc">OMEGA-7 surpasses 3 exaFLOPS sustained performance. The most capable iteration of the platform to date.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <section>
+    <div class="section-label">Leadership</div>
+    <h2 class="section-title">The Team Behind <span>OMEGA</span></h2>
+    <p class="section-body">A distributed team of over 400 researchers, engineers, and operations specialists — united by the work.</p>
+
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">DV</div>
+        <div class="team-name">Dr. Dana Voss</div>
+        <div class="team-role">Chief Executive Officer</div>
+        <p class="team-bio">Former research director at CERN. PhD in computational physics. Has led CIG since its founding in 2017.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">EK</div>
+        <div class="team-name">Emeka Kalu</div>
+        <div class="team-role">CTO — Systems Architecture</div>
+        <p class="team-bio">Designed OMEGA's core mesh-fabric interconnect. Previously led distributed systems at two major cloud providers.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">SI</div>
+        <div class="team-name">Dr. Sora Iida</div>
+        <div class="team-role">Head of ML Research</div>
+        <p class="team-bio">Leads CIG's published research program. Co-author of 34 peer-reviewed papers on scalable inference architecture.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">MP</div>
+        <div class="team-name">Marcus Pryde</div>
+        <div class="team-role">Director, OMEGA Operations</div>
+        <p class="team-bio">Oversees the day-to-day reliability and uptime of all OMEGA nodes. Background in aerospace telemetry systems.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">LR</div>
+        <div class="team-name">Layla Rashid</div>
+        <div class="team-role">Head of Talent & Community</div>
+        <p class="team-bio">Created the Coding Challenge program from the ground up. Former lead engineer at two YC-backed ML startups.</p>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">TN</div>
+        <div class="team-name">Dr. Tomas Nkrumah</div>
+        <div class="team-role">Chief Security Officer</div>
+        <p class="team-bio">Designed CIG's zero-trust enclave architecture. Advises three national cybersecurity frameworks internationally.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <div class="footer-brand">COLLECTIVE INTELLIGENCE GROUP</div>
+      <div class="footer-copy">© 2025 Collective Intelligence Group, Inc. All rights reserved.</div>
+    </div>
+    <div class="footer-right">
+      OMEGA-7 STATUS: <span style="color:var(--teal)">OPERATIONAL</span><br>
+      LAST SYNC: <span class="last-sync-val"></span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════ OMEGA PAGE ════════════════════════════ -->
+<div id="page-omega" class="page">
+
+  <div class="omega-hero">
+    <div class="hero-grid-bg"></div>
+    <div class="omega-hero-content">
+      <div class="section-label">OMEGA Division</div>
+      <h1 class="section-title" style="font-size:clamp(2.4rem,4vw,4rem);">
+        The System at the<br><span>Center of Everything</span>
+      </h1>
+      <p class="section-body" style="margin-top:1.5rem;">
+        OMEGA is not a single machine. It is a living architecture — a continuously evolving computational substrate that integrates heterogeneous processing nodes, adaptive routing fabric, and a self-optimizing workload scheduler into a unified platform. Each generation has shattered the performance ceiling of its predecessor. OMEGA-7 is the current state of the art.
+      </p>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-label">Technical Specifications</div>
+    <h2 class="section-title">OMEGA-7 — <span>System Profile</span></h2>
+    <p class="section-body">Public-facing specifications for OMEGA's current primary cluster. Detailed architecture documentation is available to verified research partners.</p>
+
+    <table class="spec-table">
+      <tr><td>Platform Designation</td><td>OMEGA-7 (Generation VII)</td></tr>
+      <tr><td>Peak Performance</td><td>3.1 ExaFLOPS (FP64 sustained)</td></tr>
+      <tr><td>Node Count</td><td>8,192 heterogeneous compute nodes</td></tr>
+      <tr><td>Memory</td><td>2.4 PB aggregate high-bandwidth memory</td></tr>
+      <tr><td>Interconnect</td><td>CIG MeshFabric v4 — 400 Gb/s per link</td></tr>
+      <tr><td>Storage</td><td>180 PB — NVMe + tape cold tier</td></tr>
+      <tr><td>Operating System</td><td>CIG LinuxOS 7.3 (hardened kernel)</td></tr>
+      <tr><td>Uptime (12-month avg)</td><td>99.97%</td></tr>
+      <tr><td>Security Architecture</td><td>Zero-trust enclave — hardware-attested</td></tr>
+      <tr><td>Cooling System</td><td>Liquid immersion — PUE 1.07</td></tr>
+      <tr><td>Power Draw</td><td>~28 MW operational</td></tr>
+      <tr><td>Location</td><td>Distributed — undisclosed secure facilities</td></tr>
+    </table>
+
+    <!-- Terminal -->
+    <div class="terminal">
+      <div><span class="t-teal">omega@cig-hpc</span><span class="t-muted">:~$</span> status --verbose</div>
+      <div>&nbsp;</div>
+      <div><span class="t-green">✔</span> OMEGA-7 core: <span class="t-teal">NOMINAL</span></div>
+      <div><span class="t-green">✔</span> MeshFabric v4: <span class="t-teal">ALL LINKS UP (8192/8192)</span></div>
+      <div><span class="t-green">✔</span> Memory subsystem: <span class="t-teal">2.4PB ACCESSIBLE</span></div>
+      <div><span class="t-green">✔</span> Scheduler: <span class="t-teal">ACTIVE — 1,847 JOBS QUEUED</span></div>
+      <div><span class="t-amber">⚠</span> Sector 7-G: <span class="t-amber">MAINTENANCE WINDOW — NON-CRITICAL</span></div>
+      <div><span class="t-green">✔</span> Security enclave: <span class="t-teal">NOMINAL — ATTESTATION VALID</span></div>
+      <div>&nbsp;</div>
+      <div><span class="t-muted">OVERALL STATUS:</span> <span class="t-green">OPERATIONAL</span></div>
+      <div><span class="t-muted">UPTIME:</span> <span class="t-teal" id="uptime-display">Loading...</span></div>
+      <div><span class="t-muted">BENCHMARK RANK:</span> <span class="t-teal">#1 — EXAFLOPS CLASS</span></div>
+      <div>&nbsp;</div>
+      <div><span class="t-teal">omega@cig-hpc</span><span class="t-muted">:~$</span> <span class="cursor"></span></div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <section>
+    <div class="section-label">Performance</div>
+    <h2 class="section-title">Benchmark <span>Results</span></h2>
+    <p class="section-body">OMEGA-7 performance across core evaluation categories. Figures represent sustained throughput under production workloads.</p>
+
+    <div class="omega-perf-grid">
+      <div class="perf-cell">
+        <div class="perf-value">3.1 EF</div>
+        <div class="perf-label">Peak Compute (FP64)</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:100%"></div></div>
+      </div>
+      <div class="perf-cell">
+        <div class="perf-value">99.97%</div>
+        <div class="perf-label">12-Month Uptime</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:99.97%"></div></div>
+      </div>
+      <div class="perf-cell">
+        <div class="perf-value">1.07</div>
+        <div class="perf-label">Power Usage Efficiency</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:92%"></div></div>
+      </div>
+      <div class="perf-cell">
+        <div class="perf-value">400 Gb/s</div>
+        <div class="perf-label">Inter-node Bandwidth</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:88%"></div></div>
+      </div>
+      <div class="perf-cell">
+        <div class="perf-value">2.4 PB</div>
+        <div class="perf-label">Aggregate Memory</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:81%"></div></div>
+      </div>
+      <div class="perf-cell">
+        <div class="perf-value">180 PB</div>
+        <div class="perf-label">Total Storage</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:75%"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <section>
+    <div class="section-label">Research Applications</div>
+    <h2 class="section-title">What OMEGA <span>Powers</span></h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">BIO</div>
+        <div class="feature-title">Genomics & Protein Folding</div>
+        <p class="feature-desc">OMEGA runs large-scale molecular dynamics simulations for partner research institutions, enabling protein structure prediction at resolutions previously out of reach.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">CLI</div>
+        <div class="feature-title">Climate Modeling</div>
+        <p class="feature-desc">High-resolution climate simulations with 500m grid spacing — detailed enough to model localized weather phenomena with accuracy unavailable on conventional supercomputers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">AI</div>
+        <div class="feature-title">Foundation Model Training</div>
+        <p class="feature-desc">OMEGA's memory and compute density allow full-precision training of multi-hundred-billion parameter models without the gradient approximations that degrade smaller clusters.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <div class="footer-brand">COLLECTIVE INTELLIGENCE GROUP — OMEGA DIVISION</div>
+      <div class="footer-copy">© 2025 Collective Intelligence Group, Inc. All rights reserved. Specs subject to change without notice.</div>
+    </div>
+    <div class="footer-right">
+      OMEGA-7 STATUS: <span style="color:var(--teal)">OPERATIONAL</span><br>
+      NODE COUNT: 8,192 / 8,192 ACTIVE
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════ CHALLENGE PAGE ════════════════════════ -->
+<div id="page-challenge" class="page">
+
+  <div class="page-hero-strip">
+    <div class="section-label">Weekly Coding Challenge</div>
+    <h1 class="section-title" style="font-size:clamp(2.4rem,4vw,3.8rem); max-width: 700px;">
+      Prove You're the<br><span>Sharpest Mind</span> in the Room.
+    </h1>
+    <p class="section-body" style="margin-top:1.5rem; font-size:1rem;">
+      Every edition, CIG releases a new computational challenge drawn directly from problems OMEGA encounters at scale. The best solution earns prizes — and the top performer earns something rarer: a position on the OMEGA Division team.
+    </p>
+  </div>
+
+  <section>
+    <div class="section-label">Active & Upcoming</div>
+    <h2 class="section-title">Current <span>Challenges</span></h2>
+
+    <div class="challenge-layout">
+      <div>
+        <div class="challenge-list">
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 19</div>
+            <div class="challenge-info">
+              <h3>Adversarial Graph Traversal</h3>
+              <p>Shortest-path discovery under dynamic edge removal — OMEGA's network scheduling core</p>
+            </div>
+            <div class="challenge-badge badge-open">OPEN</div>
+          </div>
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 18</div>
+            <div class="challenge-info">
+              <h3>Probabilistic Constraint Solver</h3>
+              <p>Satisfiability under stochastic constraints — resource allocation under uncertainty</p>
+            </div>
+            <div class="challenge-badge badge-upcoming">UPCOMING</div>
+          </div>
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 17</div>
+            <div class="challenge-info">
+              <h3>Emergent Strategy Classification</h3>
+              <p>Classify novel strategies emerging from multi-agent game simulations in real time</p>
+            </div>
+            <div class="challenge-badge badge-closed">CLOSED</div>
+          </div>
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 16</div>
+            <div class="challenge-info">
+              <h3>Distributed Consensus Under Partition</h3>
+              <p>Maintain consensus across node clusters experiencing Byzantine failure scenarios</p>
+            </div>
+            <div class="challenge-badge badge-closed">CLOSED</div>
+          </div>
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 15</div>
+            <div class="challenge-info">
+              <h3>Tensor Decomposition at Scale</h3>
+              <p>Decompose high-dimensional tensors under memory constraints — OMEGA's inference optimization</p>
+            </div>
+            <div class="challenge-badge badge-closed">CLOSED</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="challenge-sidebar">
+        <div class="sidebar-title">//  EDITION 18 PRIZES</div>
+        <div class="prize-item">
+          <span class="prize-label">1st Place</span>
+          <span class="prize-value">$25,000</span>
+        </div>
+        <div class="prize-item">
+          <span class="prize-label">2nd Place</span>
+          <span class="prize-value">$10,000</span>
+        </div>
+        <div class="prize-item">
+          <span class="prize-label">3rd Place</span>
+          <span class="prize-value">$5,000</span>
+        </div>
+        <div class="prize-item">
+          <span class="prize-label">Top 10</span>
+          <span class="prize-value">CIG Research Credit</span>
+        </div>
+        <div class="prize-item">
+          <span class="prize-label">Winner</span>
+          <span class="prize-value">OMEGA Division Offer</span>
+        </div>
+
+        <div class="register-box">
+          <div class="sidebar-title" style="margin-bottom:1rem;">// REGISTER TO COMPETE</div>
+          <input class="input-field" id="reg-handle" type="text" placeholder="HANDLE / ALIAS" />
+          <input class="input-field" id="reg-email" type="email" placeholder="EMAIL ADDRESS" />
+          <input class="input-field" id="reg-lang" type="text" placeholder="PRIMARY LANGUAGE (e.g. C++, Rust)" />
+          <button class="btn-full" id="reg-btn" onclick="handleRegister()">Submit Registration →</button>
+          <div id="reg-confirm" style="display:none; margin-top:0.8rem; font-family:var(--font-mono); font-size:0.7rem; color:var(--teal); letter-spacing:0.15em;">
+            ✔ REGISTRATION RECEIVED — CHECK YOUR INBOX
+          </div>
+          <div id="reg-error" style="display:none; margin-top:0.8rem; font-family:var(--font-mono); font-size:0.7rem; color:#f87171; letter-spacing:0.15em;">
+            ✖ SEND FAILED — PLEASE TRY AGAIN
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <section>
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">The <span>Process</span></h2>
+
+    <div class="feature-grid" style="margin-top:3rem;">
+      <div class="feature-card">
+        <div class="feature-icon" style="font-size:1.3rem; font-family:var(--font-ui); font-weight:700;">01</div>
+        <div class="feature-title">Register & Access</div>
+        <p class="feature-desc">Create your challenger profile. Each Monday at 09:00 UTC, the new challenge specification drops — a detailed problem statement with input/output constraints and a scoring rubric.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="font-size:1.3rem; font-family:var(--font-ui); font-weight:700;">02</div>
+        <div class="feature-title">Build Your Solution</div>
+        <p class="feature-desc">You have 72 hours. Any language. Any approach. Solutions are scored on correctness, runtime efficiency, and — for top scorers — code elegance as reviewed by OMEGA engineers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="font-size:1.3rem; font-family:var(--font-ui); font-weight:700;">03</div>
+        <div class="feature-title">Submit & Be Ranked</div>
+        <p class="feature-desc">Submissions run through OMEGA's automated evaluation harness. Leaderboards update in real time. Top performers are notified directly — and the winner is contacted within 48 hours.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <section style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div style="max-width:680px; margin:0 auto; text-align:center;">
+      <div class="section-label" style="justify-content:center;">The Ultimate Prize</div>
+      <h2 class="section-title" style="font-size:clamp(1.8rem,3vw,3rem); text-align:center;">
+        Join the <span>OMEGA Division</span>
+      </h2>
+      <p class="section-body" style="margin:1.5rem auto; text-align:center; font-size:1rem;">
+        Every winner receives a direct offer to join CIG's OMEGA Division as a research engineer. The work is remote, the compensation is exceptional, and the problems you'll solve are ones that don't exist anywhere else in the world. Our team of former challenge winners forms the core of OMEGA's current engineering group.
+      </p>
+      <div style="display:flex; gap:1rem; justify-content:center; margin-top:2.5rem; flex-wrap:wrap;">
+        <button class="btn-primary" onclick="document.querySelector('.challenge-list').scrollIntoView({behavior:'smooth'})">View Current Challenge</button>
+        <button class="btn-ghost" onclick="showPage('about')">Meet the Team →</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <div class="footer-brand">COLLECTIVE INTELLIGENCE GROUP — CODING CHALLENGE</div>
+      <div class="footer-copy">© 2025 Collective Intelligence Group, Inc. Challenge prizes distributed within 30 days of verification. Employment offers subject to standard screening.</div>
+    </div>
+    <div class="footer-right">
+      CURRENT CHALLENGE: <span style="color:var(--teal)"> EDITION 18 — OPEN</span><br>
+      CLOSES IN: <span id="countdown" style="color:var(--amber)">--:--:--</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════════ SCRIPTS ══════════════════════════════ -->
+<script>
+  // ─────────────────────────────────────────────────────────────
+  //  EMAILJS CONFIGURATION
+  //  Replace the three values below with your own credentials
+  //  from https://dashboard.emailjs.com
+  //
+  //  Public Key  → Account → API Keys
+  //  Service ID  → Email Services → your service → Service ID
+  //  Template ID → Email Templates → your template → Template ID
+  //
+  //  Template variables available:
+  //    {{handle}}    – challenger alias
+  //    {{email}}     – registrant email
+  //    {{language}}  – primary language
+  //    {{challenge}} – auto-filled challenge label
+  // ─────────────────────────────────────────────────────────────
+  const EMAILJS_PUBLIC_KEY  = 'aLzDsp1SCGw-LgW-z';
+  const EMAILJS_SERVICE_ID  = 'service_tdvn7x8';
+  const EMAILJS_TEMPLATE_ID = 'template_34y2qdf';
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  // Page navigation
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.getElementById('nav-' + id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Live clock for last sync
+  function updateSync() {
+    const now = new Date();
+    const str = now.toISOString().replace('T', ' ').split('.')[0] + ' UTC';
+    document.querySelectorAll('#last-sync, .last-sync-val').forEach(el => el.textContent = str);
+  }
+  updateSync();
+  setInterval(updateSync, 5000);
+
+  // Uptime counter
+  function updateUptime() {
+    // Fake uptime: started 347 days ago
+    const days = 347, hrs = 14, mins = 32;
+    const totalSeconds = (days * 86400) + (hrs * 3600) + (mins * 60) + Math.floor(Date.now()/1000 % 60);
+    const d = Math.floor(totalSeconds / 86400);
+    const h = Math.floor((totalSeconds % 86400) / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    const el = document.getElementById('uptime-display');
+    if (el) el.textContent = `${d}d ${h}h ${m}m ${s}s`;
+  }
+  updateUptime();
+  setInterval(updateUptime, 1000);
+
+  // Countdown (fake: 4 days)
+  function updateCountdown() {
+    let remaining = (4 * 86400) - (Math.floor(Date.now() / 1000) % (4 * 86400));
+    const h = Math.floor(remaining / 3600);
+    const m = Math.floor((remaining % 3600) / 60);
+    const s = remaining % 60;
+    const el = document.getElementById('countdown');
+    if (el) el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ─────────────────────────────────────────────────────────────
+  //  REGISTRATION HANDLER
+  // ─────────────────────────────────────────────────────────────
+  async function handleRegister() {
+    const handle   = document.getElementById('reg-handle').value.trim();
+    const email    = document.getElementById('reg-email').value.trim();
+    const language = document.getElementById('reg-lang').value.trim();
+    const btn      = document.getElementById('reg-btn');
+    const confirm  = document.getElementById('reg-confirm');
+    const errBox   = document.getElementById('reg-error');
+
+    // Reset feedback
+    confirm.style.display = 'none';
+    errBox.style.display  = 'none';
+
+    // Validation
+    if (!handle || !email || !language) {
+      errBox.textContent   = '✖ ALL FIELDS ARE REQUIRED';
+      errBox.style.display = 'block';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errBox.textContent   = '✖ INVALID EMAIL ADDRESS';
+      errBox.style.display = 'block';
+      return;
+    }
+
+    // Loading state
+    btn.disabled        = true;
+    btn.textContent     = 'TRANSMITTING…';
+
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        handle:    handle,
+        email:     email,
+        language:  language,
+        challenge: 'Week 18 — Adversarial Graph Traversal',
+      });
+      confirm.textContent   = '✔ REGISTRATION RECEIVED — CHECK YOUR INBOX';
+      confirm.style.display = 'block';
+      document.getElementById('reg-handle').value = '';
+      document.getElementById('reg-email').value  = '';
+      document.getElementById('reg-lang').value   = '';
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      errBox.textContent   = '✖ SEND FAILED — PLEASE TRY AGAIN';
+      errBox.style.display = 'block';
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Submit Registration →';
+    }
+  }
+
+  // Animate stat numbers on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.stat-cell, .feature-card, .challenge-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
