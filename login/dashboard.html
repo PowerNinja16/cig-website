@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CIG — Executive Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#06090b;
+  --panel:#0c1317;
+  --panel2:#0f1820;
+  --teal:#00e5c8;
+  --teal-dim:#00a896;
+  --muted:#5a7a85;
+  --white:#e8f0f2;
+  --border:rgba(0,229,200,0.16);
+  --font-ui:'Rajdhani',sans-serif;
+  --font-mono:'Share Tech Mono',monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-ui);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-layout {
+  width: 100vw;
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+/* ─── OMEGA TERMINAL ───────────────────────────────── */
+.terminal {
+  background:#040708;
+  border:1px solid var(--border);
+  padding:1.5rem 2rem;
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  line-height:1.8;
+  color:rgba(232,240,242,0.55);
+  position:relative;
+}
+
+.t-green { color:#4ade80; }
+.t-teal  { color:var(--teal); }
+.t-amber { color:#f0a500; }
+.t-red { color:#f00000; }
+.t-muted { color:var(--muted); }
+
+.cursor {
+  display:inline-block;
+  width:8px;
+  height:1em;
+  background:var(--teal);
+  animation: blink 1s step-end infinite;
+  vertical-align:middle;
+}
+
+@keyframes blink { 50% { opacity:0; } }
+
+/* ───────── SIDEBAR ───────── */
+.sidebar{
+  background:var(--panel);
+  border-right:1px solid var(--border);
+  padding:1.8rem 1.2rem;
+}
+
+.brand{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  letter-spacing:0.28em;
+  color:var(--teal);
+  margin-bottom:2rem;
+}
+
+.user-box{
+  margin-bottom:2rem;
+}
+
+.user-name{
+  font-weight:700;
+  font-size:1.05rem;
+}
+
+.user-role{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.18em;
+  color:var(--teal-dim);
+}
+
+.nav-section{
+  margin-top:2rem;
+}
+
+.nav-title{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  letter-spacing:0.25em;
+  color:var(--muted);
+  margin-bottom:0.6rem;
+}
+
+.nav-btn{
+  width:100%;
+  background:none;
+  border:1px solid transparent;
+  color:var(--white);
+  padding:0.6rem 0.7rem;
+  text-align:left;
+  cursor:pointer;
+  font-family:var(--font-ui);
+  font-size:0.85rem;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  border-color:var(--teal);
+  background:rgba(0,229,200,0.06);
+}
+
+/* ───────── MAIN ───────── */
+.main{
+  padding:2.2rem 2.8rem;
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:2rem;
+}
+
+.header h1{
+  font-size:1.8rem;
+}
+
+.header span{
+  color:var(--teal);
+}
+
+.status{
+  font-family:var(--font-mono);
+  font-size:0.65rem;
+  letter-spacing:0.2em;
+  color:var(--teal);
+}
+
+/* ───────── FILE GRID ───────── */
+.section{
+  margin-top:2rem;
+}
+
+.section-title{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.22em;
+  color:var(--teal);
+  margin-bottom:1rem;
+}
+
+.file-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:1px;
+  background:var(--border);
+}
+
+.file-card{
+  background:var(--panel2);
+  padding:1.4rem;
+  cursor:pointer;
+  position:relative;
+}
+
+.file-card:hover{
+  background:#13202a;
+}
+
+.file-type{
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  color:var(--muted);
+  letter-spacing:0.18em;
+}
+
+.file-name{
+  margin-top:0.4rem;
+  font-size:0.9rem;
+  font-weight:600;
+}
+
+.file-note{
+  font-size:0.75rem;
+  color:rgba(232,240,242,0.55);
+  margin-top:0.6rem;
+  line-height:1.6;
+}
+
+/* ───────── MODAL ───────── */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.65);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+}
+
+.modal-box{
+  background:var(--panel);
+  border:1px solid var(--border);
+  width:100%;
+  max-width:640px;
+  padding:2rem;
+}
+
+.modal-title{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.22em;
+  color:var(--teal);
+  margin-bottom:1rem;
+}
+
+.modal-content{
+  font-family:var(--font-mono);
+  background:#040708;
+  border:1px solid var(--border);
+  padding:1.5rem;
+  font-size:0.75rem;
+  line-height:1.9;
+  white-space:pre-wrap;
+  color:rgba(232,240,242,0.65);
+}
+
+.close-btn{
+  margin-top:1.5rem;
+  background:var(--teal);
+  border:none;
+  padding:0.6rem 1.6rem;
+  cursor:pointer;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:0.15em;
+}
+</style>
+</head>
+
+<script src="js/util-time.js"></script>
+
+<script>
+if (sessionStorage.getItem('cig_auth') !== 'true') {
+  window.location.href = 'login.html';
+}
+
+</script>
+``
+<body>
+<div class="dashboard-layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="brand">CIG INTERNAL</div>
+
+    <div class="user-box">
+      <div class="user-name">Joris de Koning</div>
+      <div class="user-role">CEO — OMEGA ACCESS A7</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-title">DIRECTORIES</div>
+      <button class="nav-btn active">/executive</button>
+      <button class="nav-btn">/research</button>
+      <button class="nav-btn">/personnel</button>
+      <button class="nav-btn">/archive</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="header">
+      <h1>Executive <span>Dashboard</span></h1>
+      <div class="status">OMEGA‑7 ONLINE</div>
+    </div>
+  
+  <!-- OMEGA TERMINAL INSERT --> 
+  <div class="section">
+    <div class="section-title">// OMEGA CORE STATUS</div>
+
+    <div class="terminal">
+        <div><span class="t-teal">omega@cig-hpc</span><span class="t-muted">:~$</span> status --verbose</div>
+        <div>&nbsp;</div>
+        <div><span class="t-green">✔</span> OMEGA-7 core: <span class="t-teal">NOMINAL</span></div>
+        <div><span class="t-green">✔</span> MeshFabric v4: <span class="t-teal">ALL LINKS UP (8192/8192)</span></div>
+        <div><span class="t-green">✔</span> Memory subsystem: <span class="t-teal">2.4PB ACCESSIBLE</span></div>
+        <div><span class="t-green">✔</span> Scheduler: <span class="t-teal">ACTIVE — 1,847 JOBS QUEUED</span></div>
+        <div><span class="t-amber">⚠</span> Sector 7-G: <span class="t-amber">MAINTENANCE WINDOW — NON-CRITICAL</span></div>
+        <div><span class="t-green">✔</span> Security enclave: <span class="t-teal">NOMINAL — ATTESTATION VALID</span></div>
+        <div>&nbsp;</div>
+        <div><span class="t-muted">OVERALL STATUS:</span> <span class="t-green">OPERATIONAL</span></div>
+        <div><span class="t-muted">UPTIME:</span> <span class="t-teal" id="uptime-display">Loading...</span></div>
+        <div><span class="t-muted">BENCHMARK RANK:</span> <span class="t-teal">#1 — EXAFLOPS CLASS</span></div>
+        <div>&nbsp;</div>
+        <div><span class="t-red">⚠</span> Cognitive load anomaly detected — sector [REDACTED]</div>
+        <div>&nbsp;</div>
+        <div><span class="t-teal">omega@cig-hpc</span><span class="t-muted">:~$</span> <span class="cursor"></span></div>
+        
+      </div>
+    <!-- FILES -->
+    <div class="section">
+      <div class="section-title">// CONFIDENTIAL FILES</div>
+
+      <div class="file-grid">
+
+        <div class="file-card" onclick="openFile('email')">
+          <div class="file-type">EMAIL</div>
+          <div class="file-name">board-thread.txt</div>
+          <div class="file-note">Internal correspondence — restricted circulation</div>
+        </div>
+
+        <div class="file-card" onclick="openFile('bank')">
+          <div class="file-type">FINANCE</div>
+          <div class="file-name">cig_accounts_2024.pdf</div>
+          <div class="file-note">Off-ledger transfers and shell routing</div>
+        </div>
+
+        <div class="file-card" onclick="openFile('images')">
+          <div class="file-type">IMAGES</div>
+          <div class="file-name">prototype_photos.zip</div>
+          <div class="file-note">Hardware R&D snapshots</div>
+        </div>
+
+        <div class="file-card" onclick="openFile('audio')">
+          <div class="file-type">AUDIO</div>
+          <div class="file-name">challenge_winner_audio.wav</div>
+          <div class="file-note">Recovered submission — integrity degraded</div>
+        </div>
+
+        <div class="file-card" onclick="openFile('text')">
+          <div class="file-type">TEXT</div>
+          <div class="file-name">the answer is right in front of you.txt</div>
+          <div class="file-note">Unindexed analysis artifact</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <div class="modal-box">
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-content" id="modal-content"></div>
+      <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<script>
+const modal = document.getElementById('modal');
+const title = document.getElementById('modal-title');
+const content = document.getElementById('modal-content');
+
+function openFile(type){
+  modal.style.display='flex';
+
+  if(type==='email'){
+    title.textContent='BOARD THREAD — INTERNAL';
+    content.textContent=
+`Dana,
+
+OMEGA throughput is exceeding projection again.
+The last challenge winner shows abnormal cognitive pattern persistence.
+
+Legal is asking questions.
+Security says it's "within tolerance".
+
+We need more submissions.
+We need less noise.
+
+— Obscura`;
+  }
+
+  if(type==='bank'){
+    title.textContent='FINANCIAL STATEMENT — REDACTED';
+    content.textContent=
+`TRANSFER LOG — Q3
+----------------------
+• $4.2M → Helix Consulting (Cayman)
+• $1.9M → Obscura Holdings
+• $7.6M → [REDACTED NODE MAINTENANCE]
+• $12.4M → MEDICAL EQUIPMENT PROCUREMENT
+
+Audit status: BYPASSED`;
+  }
+
+  if(type==='images'){
+    title.textContent='IMAGE ARCHIVE';
+    content.textContent=
+`>> FILES CONTAIN METADATA
+>> 일부 파일이 손상되었습니다
+>> EXTRACT WITH PASSWORD
+
+IMG_0441.jpg
+IMG_0442.jpg
+IMG_0443.jpg
+IMG_0444.jpg`;
+  }
+
+  if(type==='audio'){
+    title.textContent='AUDIO LOG';
+    content.textContent=
+`Spectral irregularities detected.
+Recommend frequency-domain inspection.
+
+Tag:
+"winner — challenge audio"`;
+  }
+
+  if(type==='text'){
+    title.textContent='TEXT FILE';
+    content.textContent=
+`XJQT LFMZ RQWB P OIT YB MHV
+SIUZ UDYU CHPK GMWU TIMJ
+
+NOTE:
+Use the letter after the given one.`;
+  }
+}
+
+function closeModal(){
+  modal.style.display='none';
+}
+</script>

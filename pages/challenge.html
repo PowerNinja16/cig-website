@@ -1,0 +1,163 @@
+<div class="page" id="page-challenge">
+
+  <!-- HERO STRIP -->
+  <div class="page-hero-strip">
+    <div class="section-label">Weekly Coding Challenge</div>
+
+    <h1 class="section-title" style="font-size:clamp(2.4rem,4vw,3.8rem); max-width: 700px;">
+      Prove You're the<br>
+      <span>Sharpest Mind</span> in the Room.
+    </h1>
+
+    <p class="section-body" style="margin-top:1.5rem; font-size:1rem;">
+      Every edition, CIG releases a new computational challenge drawn directly
+      from problems OMEGA encounters at scale. The best solution earns prizes —
+      and the top performer earns something rarer: a position on the OMEGA
+      Division team.
+    </p>
+  </div>
+
+  <!-- CHALLENGES -->
+  <section>
+    <div class="section-label">Active & Upcoming</div>
+
+    <h2 class="section-title">
+      Current <span>Challenges</span>
+    </h2>
+
+    <div class="challenge-layout">
+      <div>
+        <div class="challenge-list">
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 19</div>
+            <div class="challenge-info">
+              <h3>Adversarial Graph Traversal</h3>
+              <p>Shortest-path discovery under dynamic edge removal — OMEGA's network scheduling core</p>
+            </div>
+            <div class="challenge-badge badge-open">OPEN</div>
+          </div>
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 18</div>
+            <div class="challenge-info">
+              <h3>Probabilistic Constraint Solver</h3>
+              <p>Satisfiability under stochastic constraints — resource allocation under uncertainty</p>
+            </div>
+            <div class="challenge-badge badge-upcoming">UPCOMING</div>
+          </div>
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 17</div>
+            <div class="challenge-info">
+              <h3>Emergent Strategy Classification</h3>
+              <p>Classify novel strategies emerging from multi-agent game simulations in real time</p>
+            </div>
+            <div class="challenge-badge badge-closed">CLOSED</div>
+          </div>
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 16</div>
+            <div class="challenge-info">
+              <h3>Distributed Consensus Under Partition</h3>
+              <p>Maintain consensus across node clusters experiencing Byzantine failure scenarios</p>
+            </div>
+            <div class="challenge-badge badge-closed">CLOSED</div>
+          </div>
+          <div class="challenge-item">
+            <div class="challenge-edition"> EDITION 15</div>
+            <div class="challenge-info">
+              <h3>Tensor Decomposition at Scale</h3>
+              <p>Decompose high-dimensional tensors under memory constraints — OMEGA's inference optimization</p>
+            </div>
+            <div class="challenge-badge badge-closed">CLOSED</div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- SIDEBAR -->
+      <div class="challenge-sidebar">
+        <div class="sidebar-title">// EDITION 19 PRIZES</div>
+
+        <div class="prize-item">
+          <span class="prize-label">1st Place</span>
+          <span class="prize-value">$25,000</span>
+        </div>
+        <div class="prize-item">
+          <span class="prize-label">2nd Place</span>
+          <span class="prize-value">$10,000</span>
+        </div>
+        <div class="prize-item">
+          <span class="prize-label">3rd Place</span>
+          <span class="prize-value">$5,000</span>
+        </div>
+        <div class="prize-item">
+          <span class="prize-label">Winner</span>
+          <span class="prize-value">OMEGA Division Offer</span>
+        </div>
+
+        <!-- REGISTRATION -->
+        <div class="register-box">
+          <div class="sidebar-title">// REGISTER TO COMPETE</div>
+
+          <input class="input-field" id="reg-handle" type="text" placeholder="HANDLE / ALIAS">
+          <input class="input-field" id="reg-email" type="email" placeholder="EMAIL ADDRESS">
+          <input class="input-field" id="reg-lang" type="text" placeholder="PRIMARY LANGUAGE">
+
+          <button class="btn-full" onclick="handleRegister()">Submit Registration →</button>
+
+          <div id="reg-confirm"
+               style="display:none; margin-top:0.8rem; font-family:var(--font-mono);
+               font-size:0.7rem; color:var(--teal); letter-spacing:0.15em;">
+            ✔ REGISTRATION RECEIVED — CHECK YOUR INBOX
+          </div>
+
+          <div id="reg-error"
+               style="display:none; margin-top:0.8rem; font-family:var(--font-mono);
+               font-size:0.7rem; color:#f87171; letter-spacing:0.15em;">
+            ✖ SEND FAILED — PLEASE TRY AGAIN
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <!-- PROCESS -->
+  <section>
+    <div class="section-label">How It Works</div>
+
+    <h2 class="section-title">
+      The <span>Process</span>
+    </h2>
+
+    <div class="feature-grid" style="margin-top:3rem;">
+
+      <div class="feature-card">
+        <div class="feature-icon" style="font-size:1.3rem;">01</div>
+        <div class="feature-title">Register & Access</div>
+        <p class="feature-desc">
+          Register to compete. The challenge specification drops weekly.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="font-size:1.3rem;">02</div>
+        <div class="feature-title">Build Your Solution</div>
+        <p class="feature-desc">
+          Solve using any language. Solutions are scored automatically.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon" style="font-size:1.3rem;">03</div>
+        <div class="feature-title">Submit & Rank</div>
+        <p class="feature-desc">
+          Rankings update in real time. Winners contacted privately.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+

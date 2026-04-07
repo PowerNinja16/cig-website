@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CIG Secure Access Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts (same as main site) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:#080c0e;
+      --panel:#0d1417;
+      --teal:#00e5c8;
+      --teal-dim:#00a896;
+      --white:#e8f0f2;
+      --muted:#5a7a85;
+      --border:rgba(0,229,200,0.18);
+      --font-ui:'Rajdhani',sans-serif;
+      --font-mono:'Share Tech Mono',monospace;
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; }
+
+    body {
+      min-height:100vh;
+      background:var(--bg);
+      color:var(--white);
+      font-family:var(--font-ui);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* scanlines */
+    body::before {
+      content:'';
+      position:fixed;
+      inset:0;
+      background:repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.06) 2px,
+        rgba(0,0,0,0.06) 4px
+      );
+      pointer-events:none;
+      z-index:10;
+    }
+
+    .login-shell {
+      width:100%;
+      max-width:420px;
+      background:var(--panel);
+      border:1px solid var(--border);
+      padding:3rem 3rem 3.5rem;
+      position:relative;
+      z-index:2;
+    }
+
+    .login-shell::before {
+      content:'SECURE AUTH INTERFACE';
+      position:absolute;
+      top:-0.65rem;
+      left:1rem;
+      background:var(--bg);
+      padding:0 0.6rem;
+      font-size:0.6rem;
+      letter-spacing:0.25em;
+      font-family:var(--font-mono);
+      color:var(--teal);
+    }
+
+    .brand {
+      font-family:var(--font-mono);
+      color:var(--teal);
+      letter-spacing:0.28em;
+      font-size:0.85rem;
+      margin-bottom:1.4rem;
+    }
+
+    h1 {
+      font-size:1.9rem;
+      font-weight:700;
+      margin-bottom:0.5rem;
+      letter-spacing:-0.02em;
+    }
+
+    .subtitle {
+      font-family:var(--font-mono);
+      font-size:0.7rem;
+      letter-spacing:0.18em;
+      color:var(--teal-dim);
+      margin-bottom:2.2rem;
+    }
+
+    .field {
+      margin-bottom:1.4rem;
+    }
+
+    .field label {
+      display:block;
+      font-size:0.7rem;
+      font-family:var(--font-mono);
+      color:var(--muted);
+      letter-spacing:0.18em;
+      margin-bottom:0.4rem;
+    }
+
+    .field input {
+      width:100%;
+      background:var(--bg);
+      border:1px solid var(--border);
+      color:var(--white);
+      padding:0.75rem 0.9rem;
+      font-family:var(--font-mono);
+      font-size:0.8rem;
+      outline:none;
+    }
+
+    .field input:focus {
+      border-color:var(--teal);
+    }
+
+    .login-btn {
+      width:100%;
+      margin-top:1rem;
+      padding:0.85rem;
+      font-family:var(--font-ui);
+      font-weight:700;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      background:var(--teal);
+      border:none;
+      cursor:pointer;
+      transition:all 0.2s;
+      color:var(--bg);
+    }
+
+    .login-btn:hover {
+      background:var(--white);
+      box-shadow:0 0 18px rgba(0,229,200,0.35);
+    }
+
+    .error,
+    .success {
+      margin-top:1rem;
+      font-family:var(--font-mono);
+      font-size:0.7rem;
+      letter-spacing:0.15em;
+      display:none;
+    }
+
+    .error { color:#f87171; }
+    .success { color:var(--teal); }
+
+    .footer-note {
+      margin-top:2.6rem;
+      font-family:var(--font-mono);
+      font-size:0.6rem;
+      color:var(--muted);
+      letter-spacing:0.12em;
+      text-align:center;
+      line-height:1.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-shell">
+    <div class="brand">COLLECTIVE INTELLIGENCE GROUP</div>
+
+    <h1>Executive Access</h1>
+    <div class="subtitle">OMEGA INTERNAL SYSTEM</div>
+
+    <div class="field">
+      <label>AUTHORIZED IDENTITY</label>
+      <input id="user" type="text" placeholder="FULL NAME">
+    </div>
+
+    <div class="field">
+      <label>CONTROL PHRASE</label>
+      <input id="pass" type="password" placeholder="••••••••••••">
+    </div>
+
+    <button class="login-btn" onclick="login()">Authenticate →</button>
+
+    <div class="error" id="error">✖ AUTHORIZATION FAILED</div>
+    <div class="success" id="success">✔ ACCESS GRANTED — REDIRECTING</div>
+
+    <div class="footer-note">
+      OMEGA‑7 STATUS: OPERATIONAL<br>
+      UNAUTHORIZED ACCESS IS LOGGED
+    </div>
+  </div>
+
+
+
+<script>
+/* ─────────────────────────────────────────────
+   SECURE CLIENT‑SIDE AUTH (HASHED)
+   ───────────────────────────────────────────── */
+
+async function sha256(text) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function login() {
+  const userInput = document.getElementById('user').value.trim();
+  const passInput = document.getElementById('pass').value;
+
+  const error = document.getElementById('error');
+  const success = document.getElementById('success');
+
+  error.style.display = 'none';
+  success.style.display = 'none';
+
+  /* ─── USER CHECK ─────────────────────────── */
+
+  const normalizedUser = userInput.toLowerCase().replace(/\s+/g, '');
+
+  const validUser =
+    normalizedUser === 'jorisdekoning';
+
+  if (!validUser) {
+    error.style.display = 'block';
+    return;
+  }
+
+  /* ─── PASSWORD HASH CHECK ─────────────────── */
+
+  const normalizedPass = passInput.toUpperCase().trim();
+  const passHash = await sha256(normalizedPass);
+
+  const VALID_HASHES = [
+    'ef1061b383ae7ae459fb866e844f2791ac7c19d6aff04ef822440f65e46ae9df'
+  ];
+
+  if (!VALID_HASHES.includes(passHash)) {
+    error.style.display = 'block';
+    return;
+  }
+
+  /* ─── SUCCESS ────────────────────────────── */
+
+  sessionStorage.setItem('cig_auth', 'true');
+  success.style.display = 'block';
+
+  setTimeout(() => {
+    window.location.href = 'dashboard.html';
+  }, 1400);
+}
+</script>
+
+</body>
+</html>

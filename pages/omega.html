@@ -1,0 +1,149 @@
+<div class="page" id="page-omega">
+
+  <!-- OMEGA HERO -->
+  <div class="omega-hero">
+    <div class="hero-grid-bg"></div>
+
+    <div class="omega-hero-content">
+      <div class="section-label">OMEGA Division</div>
+
+      <h1 class="section-title" style="font-size:clamp(2.4rem,4vw,4rem);">
+        The System at the<br>
+        <span>Center of Everything</span>
+      </h1>
+
+      <p class="section-body" style="margin-top:1.5rem;">
+        OMEGA is not a single machine. It is a living architecture — a continuously
+        evolving computational substrate that integrates heterogeneous processing
+        nodes, adaptive routing fabric, and a self-optimizing workload scheduler
+        into a unified platform. Each generation has shattered the performance
+        ceiling of its predecessor. OMEGA‑7 is the current state of the art.
+      </p>
+    </div>
+  </div>
+
+  <!-- TECHNICAL SPECIFICATIONS -->
+  <section>
+    <div class="section-label">Technical Specifications</div>
+
+    <h2 class="section-title">
+      OMEGA‑7 — <span>System Profile</span>
+    </h2>
+
+    <p class="section-body">
+      Public-facing specifications for OMEGA's current primary cluster.
+      Detailed architecture documentation is available to verified research partners.
+    </p>
+
+    <table class="spec-table">
+      <tr><td>Platform Designation</td><td>OMEGA‑7 (Generation VII)</td></tr>
+      <tr><td>Peak Performance</td><td>3.1 ExaFLOPS (FP64 sustained)</td></tr>
+      <tr><td>Node Count</td><td>8,192 heterogeneous compute nodes</td></tr>
+      <tr><td>Memory</td><td>2.4 PB aggregate high‑bandwidth memory</td></tr>
+      <tr><td>Interconnect</td><td>CIG MeshFabric v4 — 400 Gb/s per link</td></tr>
+      <tr><td>Storage</td><td>180 PB — NVMe + tape cold tier</td></tr>
+      <tr><td>Operating System</td><td>CIG LinuxOS 7.3 (hardened kernel)</td></tr>
+      <tr><td>Uptime (12‑month avg)</td><td>99.97%</td></tr>
+      <tr><td>Security Architecture</td><td>Zero‑trust enclave — hardware‑attested</td></tr>
+      <tr><td>Cooling System</td><td>Liquid immersion — PUE 1.07</td></tr>
+      <tr><td>Power Draw</td><td>~28 MW operational</td></tr>
+      <tr><td>Location</td><td>Distributed — undisclosed secure facilities</td></tr>
+    </table>
+
+    <!-- OMEGA SYSTEM STATUS TERMINAL -->
+    <div class="terminal">
+      <div>
+        <span class="t-teal">omega@cig-hpc</span><span class="t-muted">:~$</span>
+        status --verbose
+      </div>
+      <div></div>
+      <div><span class="t-green">✔</span> OMEGA‑7 core:
+        <span class="t-teal">NOMINAL</span></div>
+      <div><span class="t-green">✔</span> MeshFabric v4:
+        <span class="t-teal">ALL LINKS UP (8192/8192)</span></div>
+      <div><span class="t-green">✔</span> Memory subsystem:
+        <span class="t-teal">2.4PB ACCESSIBLE</span></div>
+      <div><span class="t-green">✔</span> Scheduler:
+        <span class="t-teal">ACTIVE — 1,847 JOBS QUEUED</span></div>
+      <div><span class="t-amber">⚠</span> Sector 7‑G:
+        <span class="t-amber">MAINTENANCE WINDOW — NON‑CRITICAL</span></div>
+      <div><span class="t-green">✔</span> Security enclave:
+        <span class="t-teal">NOMINAL — ATTESTATION VALID</span></div>
+      <div></div>
+      <div>
+        <span class="t-muted">OVERALL STATUS:</span>
+        <span class="t-green">OPERATIONAL</span>
+      </div>
+      <div>
+        <span class="t-muted">UPTIME:</span>
+        <span class="t-teal" id="uptime-display">Loading…</span>
+      </div>
+      <div>
+        <span class="t-muted">BENCHMARK RANK:</span>
+        <span class="t-teal">#1 — EXAFLOPS CLASS</span>
+      </div>
+      <div></div>
+      <div>
+        <span class="t-teal">omega@cig-hpc</span><span class="t-muted">:~$</span>
+        <span class="cursor"></span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+
+  <!-- PERFORMANCE -->
+  <section>
+    <div class="section-label">Performance</div>
+
+    <h2 class="section-title">
+      Benchmark <span>Results</span>
+    </h2>
+
+    <p class="section-body">
+      OMEGA‑7 performance across core evaluation categories.
+      Figures represent sustained throughput under production workloads.
+    </p>
+
+    <div class="omega-perf-grid">
+
+      <div class="perf-cell">
+        <div class="perf-value">3.1 EF</div>
+        <div class="perf-label">Peak Compute (FP64)</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:100%"></div></div>
+      </div>
+
+      <div class="perf-cell">
+        <div class="perf-value">99.97%</div>
+        <div class="perf-label">12‑Month Uptime</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:99.97%"></div></div>
+      </div>
+
+      <div class="perf-cell">
+        <div class="perf-value">1.07</div>
+        <div class="perf-label">Power Usage Efficiency</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:92%"></div></div>
+      </div>
+
+      <div class="perf-cell">
+        <div class="perf-value">400 Gb/s</div>
+        <div class="perf-label">Inter‑node Bandwidth</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:88%"></div></div>
+      </div>
+
+      <div class="perf-cell">
+        <div class="perf-value">2.4 PB</div>
+        <div class="perf-label">Aggregate Memory</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:81%"></div></div>
+      </div>
+
+      <div class="perf-cell">
+        <div class="perf-value">180 PB</div>
+        <div class="perf-label">Total Storage</div>
+        <div class="perf-bar"><div class="perf-bar-fill" style="width:75%"></div></div>
+      </div>
+
+    </div>
+  </section>
+
+</div>

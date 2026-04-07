@@ -1,0 +1,222 @@
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-grid-bg"></div>
+
+    <div class="hero-left">
+      <div class="hero-eyebrow">Collective Intelligence Group</div>
+
+      <h1 class="hero-title">
+        Advancing the<br>
+        <span>Limits of</span><br>
+        Machine Scale
+      </h1>
+
+      <div class="hero-subtitle-line">
+        OMEGA DIVISION — EST. 2017
+      </div>
+
+      <p class="hero-desc">
+        CIG operates at the intersection of distributed cognition and
+        high-performance computation. Our flagship system, OMEGA,
+        represents a decade of architectural research — and we're only
+        getting started.
+      </p>
+
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="load('challenge')">
+          Enter the Challenge
+        </button>
+        <button class="btn-ghost" onclick="load('omega')">
+          Explore OMEGA →
+        </button>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="omega-diagram">
+
+        <!-- SVG Ring Diagram -->
+        <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- Outer ring -->
+          <g class="ring ring-1" filter="url(#glow)">
+            <circle cx="210" cy="210" r="178"
+              fill="none" stroke="rgba(0,229,200,0.2)" stroke-width="1"/>
+            <circle cx="210" cy="32" r="4" fill="#00e5c8"/>
+            <circle cx="388" cy="210" r="3" fill="rgba(0,229,200,0.5)"/>
+            <circle cx="210" cy="388" r="2.5" fill="rgba(0,229,200,0.3)"/>
+            <circle cx="32" cy="210" r="3.5" fill="rgba(0,229,200,0.6)"/>
+            <line x1="210" y1="32" x2="388" y2="210"
+              stroke="rgba(0,229,200,0.07)" stroke-width="1"/>
+            <line x1="32" y1="210" x2="210" y2="388"
+              stroke="rgba(0,229,200,0.07)" stroke-width="1"/>
+          </g>
+
+          <!-- Mid ring -->
+          <g class="ring ring-2" filter="url(#glow)">
+            <circle cx="210" cy="210" r="130" fill="none"
+              stroke="rgba(0,229,200,0.3)"
+              stroke-width="1" stroke-dasharray="8 4"/>
+            <circle cx="210" cy="80" r="5" fill="#00e5c8"/>
+            <circle cx="340" cy="210" r="4" fill="#00a896"/>
+            <circle cx="80" cy="210" r="3" fill="rgba(0,229,200,0.7)"/>
+            <circle cx="210" cy="340" r="4.5" fill="rgba(0,229,200,0.4)"/>
+          </g>
+
+          <!-- Inner ring -->
+          <g class="ring ring-3">
+            <circle cx="210" cy="210" r="84" fill="none"
+              stroke="rgba(0,229,200,0.4)" stroke-width="1.5"/>
+            <circle cx="210" cy="126" r="4" fill="#00e5c8" filter="url(#glow)"/>
+            <circle cx="294" cy="210" r="3" fill="#00e5c8"/>
+            <circle cx="210" cy="294" r="3.5" fill="rgba(0,229,200,0.5)"/>
+            <circle cx="126" cy="210" r="3" fill="#00e5c8"/>
+          </g>
+
+          <!-- Core -->
+          <circle cx="210" cy="210" r="46"
+            fill="rgba(0,229,200,0.05)"
+            stroke="rgba(0,229,200,0.6)" stroke-width="1.5"
+            filter="url(#glow)"/>
+          <circle cx="210" cy="210" r="32"
+            fill="rgba(0,229,200,0.08)"
+            stroke="rgba(0,229,200,0.3)" stroke-width="1"/>
+
+          <!-- Tick marks -->
+          <g opacity="0.3" stroke="#00e5c8" stroke-width="1">
+            <line x1="210" y1="20" x2="210" y2="30"/>
+            <line x1="210" y1="390" x2="210" y2="400"/>
+            <line x1="20" y1="210" x2="30" y2="210"/>
+            <line x1="390" y1="210" x2="400" y2="210"/>
+          </g>
+        </svg>
+
+        <div class="omega-core-pulse"></div>
+
+        <div class="omega-label">
+          <span class="omega-label-main">Ω</span>
+          <span class="omega-label-sub">OMEGA-7 LIVE</span>
+        </div>
+
+        <div class="metric-bubble m1">
+          <strong>847</strong>
+          PFLOPS/s
+        </div>
+        <div class="metric-bubble m2">
+          <strong>99.97%</strong>
+          UPTIME
+        </div>
+        <div class="metric-bubble m3">
+          <strong>14.2B</strong>
+          PARAMS
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker-bar">
+    <div class="ticker-inner">
+      <span class="ticker-item">
+        OMEGA BENCHMARK <span class="val up">↑ 312%</span>
+      </span>
+      <span class="ticker-item">
+        CHALLENGE #18 <span class="val">OPEN</span>
+      </span>
+      <span class="ticker-item">
+        PARTICIPANTS <span class="val">41,209</span>
+      </span>
+      <span class="ticker-item">
+        UPTIME <span class="val up">99.97%</span>
+      </span>
+      <span class="ticker-item">
+        COMPUTE NODES <span class="val">8,192</span>
+      </span>
+      <span class="ticker-item">
+        CURRENT BENCHMARK <span class="val">3.1 EXAFLOPS</span>
+      </span>
+      <span class="ticker-item">
+        LATEST WINNER <span class="val">[REDACTED]</span>
+      </span>
+    </div>
+  </div>
+  <!-- MISSION -->
+  <section>
+    <div class="section-label">Mission</div>
+    <h2 class="section-title">Intelligence at <span>Planetary Scale</span></h2>
+    <p class="section-body">
+      Collective Intelligence Group was founded on a simple but audacious premise: that the most complex challenges facing civilization—climate modeling, drug discovery, logistical optimization at global scale—require computational architectures that don't yet exist. We build them. Our work at the OMEGA Division bridges distributed systems theory, machine learning infrastructure, and frontier research to create systems that outperform what any single processor, cluster, or cloud platform can deliver alone.
+    </p>
+
+    <div class="stats-row">
+      <div class="stat-cell">
+        <div class="stat-num">3.1<span style="font-size:1.2rem"> EF</span></div>
+        <div class="stat-label">Peak Compute</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">18</div>
+        <div class="stat-label">Weekly Challenges Run</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">41K+</div>
+        <div class="stat-label">Global Competitors</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">97</div>
+        <div class="stat-label">Research Publications</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-rule">
+    <!-- FEATURES -->
+  <section>
+    <div class="section-label">Capabilities</div>
+    <h2 class="section-title">What CIG <span>Does</span></h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">HPC</div>
+        <div class="feature-title">High-Performance Computing</div>
+        <p class="feature-desc">OMEGA's architecture leverages heterogeneous node arrays — GPU, TPU, and custom ASIC — interconnected by our proprietary low-latency mesh fabric, delivering sustained petaflop throughput for real-world workloads.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">ML</div>
+        <div class="feature-title">Machine Learning Research</div>
+        <p class="feature-desc">Our ML Division publishes open research on scalable training infrastructure, novel optimizer architectures, and emergent reasoning benchmarks. Collaboration with universities across 14 countries.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">SIM</div>
+        <div class="feature-title">Simulation & Modeling</div>
+        <p class="feature-desc">From protein folding at atomic resolution to city-scale traffic optimization, OMEGA's simulation layer handles stochastic and deterministic workloads with reproducible precision.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">SYS</div>
+        <div class="feature-title">Distributed Systems Engineering</div>
+        <p class="feature-desc">CIG engineers design fault-tolerant, globally distributed pipelines that maintain consistency under adversarial network conditions — a core competency of the OMEGA platform.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">SEC</div>
+        <div class="feature-title">Secure Compute Environments</div>
+        <p class="feature-desc">All OMEGA workloads run within cryptographically isolated enclaves. Zero-trust networking, hardware attestation, and continuous audit trails ensure data sovereignty for all research partners.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">TAL</div>
+        <div class="feature-title">Talent & Community</div>
+        <p class="feature-desc">Through our Coding Challenges and open research programs, CIG cultivates a global community of engineers, researchers, and problem-solvers — the human layer behind OMEGA's breakthroughs.</p>
+      </div>
+    </div>
+  </section>
+</div>
