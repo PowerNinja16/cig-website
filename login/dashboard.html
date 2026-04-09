@@ -260,7 +260,7 @@ body {
 </style>
 </head>
 
-<script src="js/util-time.js"></script>
+<script src="/js/util-time.js"></script>
 
 <script>
 if (sessionStorage.getItem('cig_auth') !== 'true') {
@@ -373,7 +373,7 @@ const modal = document.getElementById('modal');
 const title = document.getElementById('modal-title');
 const content = document.getElementById('modal-content');
 
-function openFile(type){
+async function openFile(type){
   modal.style.display='flex';
 
   if(type==='email'){
@@ -406,18 +406,43 @@ We need less noise.
 Audit status: BYPASSED`;
   }
 
-  if(type==='images'){
-    title.textContent='IMAGE ARCHIVE';
-    content.textContent=
-`>> FILES CONTAIN METADATA
->> 일부 파일이 손상되었습니다
->> EXTRACT WITH PASSWORD
 
-IMG_0441.jpg
-IMG_0442.jpg
-IMG_0443.jpg
-IMG_0444.jpg`;
+if (type === 'images') {
+  try {
+    const password = sessionStorage.getItem("cig_pass");
+    if (!password) throw new Error("NO SESSION KEY");
+
+    const res = await fetch("/files_dashboard/secret.enc.json");
+    const encJson = await res.json();
+
+    const decryptedBuffer = await decryptFile(encJson, password);
+
+    // Create downloadable JPEG blob
+    const blob = new Blob([decryptedBuffer], {
+      type: "image/jpeg"
+    });
+
+    // ✅ THIS LINE WAS MISSING
+    const url = URL.createObjectURL(blob);
+
+    // ✅ CREATE <a> BEFORE USING IT
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "group_codemind_embeded.jpg";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
+
+  } catch (e) {
+    modal.style.display = "flex";
+    title.textContent = "DECRYPTION FAILURE";
+    content.textContent =
+      "Archive integrity check failed.\n\n>> PASSWORD INVALID OR FILE CORRUPTED";
   }
+}
+
 
   if(type==='audio'){
     title.textContent='AUDIO LOG';
