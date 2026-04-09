@@ -254,6 +254,10 @@ async function login() {
   /* ─── SUCCESS ────────────────────────────── */
 
   sessionStorage.setItem('cig_auth', 'true');
+  
+  /* Store password for decryption (ARG use) */
+  sessionStorage.setItem('cig_pass', normalizedPass);
+
   success.style.display = 'block';
 
   setTimeout(() => {
