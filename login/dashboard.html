@@ -281,10 +281,7 @@ if (sessionStorage.getItem('cig_auth') !== 'true') {
 
     <div class="nav-section">
       <div class="nav-title">DIRECTORIES</div>
-      <button class="nav-btn active">/executive</button>
-      <button class="nav-btn">/research</button>
-      <button class="nav-btn">/personnel</button>
-      <button class="nav-btn">/archive</button>
+      <button class="nav-btn active">executive</button>
     </div>
   </div>
 
@@ -300,7 +297,7 @@ if (sessionStorage.getItem('cig_auth') !== 'true') {
     <div class="section-title">// OMEGA CORE STATUS</div>
 
     <div class="terminal">
-        <div><span class="t-teal">omega@cig-hpc</span><span class="t-muted">:~$</span> status --verbose</div>
+        <div><span class="t-teal">Joris de Koning</span><span class="t-muted">:~$</span> status --verbose</div>
         <div>&nbsp;</div>
         <div><span class="t-green">✔</span> OMEGA-7 core: <span class="t-teal">NOMINAL</span></div>
         <div><span class="t-green">✔</span> MeshFabric v4: <span class="t-teal">ALL LINKS UP (8192/8192)</span></div>
@@ -315,7 +312,7 @@ if (sessionStorage.getItem('cig_auth') !== 'true') {
         <div>&nbsp;</div>
         <div><span class="t-red">⚠</span> Cognitive load anomaly detected — sector [REDACTED]</div>
         <div>&nbsp;</div>
-        <div><span class="t-teal">omega@cig-hpc</span><span class="t-muted">:~$</span> <span class="cursor"></span></div>
+        <div><span class="t-teal">Joris de Koning</span><span class="t-muted">:~$</span> <span class="cursor"></span></div>
         
       </div>
     <!-- FILES -->
@@ -326,14 +323,32 @@ if (sessionStorage.getItem('cig_auth') !== 'true') {
 
         <div class="file-card" onclick="openFile('email')">
           <div class="file-type">EMAIL</div>
-          <div class="file-name">board-thread.txt</div>
+          <div class="file-name">email.jpg</div>
           <div class="file-note">Internal correspondence — restricted circulation</div>
         </div>
 
         <div class="file-card" onclick="openFile('images')">
           <div class="file-type">IMAGES</div>
-          <div class="file-name">prototype_photos.zip</div>
-          <div class="file-note">Hardware R&D snapshots</div>
+          <div class="file-name">group_codemind.jpg</div>
+          <div class="file-note">Photo from codemind event</div>
+        </div>
+
+        <div class="file-card" onclick="openFile('tools')">
+          <div class="file-type">TOOLS</div>
+          <div class="file-name">steghide.zip</div>
+          <div class="file-note">Exclusive developer utilities</div>
+        </div>
+
+        <div class="file-card" onclick="openFile('research')">
+          <div class="file-type">RESEARCH</div>
+          <div class="file-name">researchLinks.txt</div>
+          <div class="file-note">Confidential research documentation</div>
+        </div>
+
+        <div class="file-card" onclick="openFile('communications')">
+          <div class="file-type">intercepted communications</div>
+          <div class="file-name">communications_from_winners.txt</div>
+          <div class="file-note">Confidential intercepted communications</div>
         </div>
       </div>
     </div>
@@ -349,66 +364,60 @@ if (sessionStorage.getItem('cig_auth') !== 'true') {
 </div>
 
 <script>
-const modal = document.getElementById('modal');
-const title = document.getElementById('modal-title');
-const content = document.getElementById('modal-content');
+const modal = document.getElementById('modal'); 
+const title = document.getElementById('modal-title'); 
+const content = document.getElementById('modal-content'); 
 
-async function openFile(type){
-
-  if(type==='email'){
-try {
-    const password = sessionStorage.getItem("cig_pass");
-    if (!password) throw new Error("NO SESSION KEY");
-
-    const res = await fetch("/files_dashboard/email.enc.json");
-    const encJson = await res.json();
-
-    const decryptedBuffer = await decryptFile(encJson, password);
-
-    // Create downloadable PNG blob
-    const blob = new Blob([decryptedBuffer], {
-      type: "image/png"
-    });
-
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "email.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    URL.revokeObjectURL(url);
-
-  } catch (e) {
-    modal.style.display = "flex";
-    title.textContent = "DECRYPTION FAILURE";
-    content.textContent =
-      "Archive integrity check failed.\n\n>> PASSWORD INVALID OR FILE CORRUPTED";
+const FILE_CONFIG = {
+  email: {
+    path: "/files_dashboard/email.enc.json",
+    mime: "image/png",
+    filename: "email.png"
+  },
+  images: {
+    path: "/files_dashboard/group_codemind.enc.json",
+    mime: "image/jpeg",
+    filename: "group_codemind_embedded.jpg"
+  },
+  tools: {
+    path: "/files_dashboard/steghide.enc.json",
+    mime: "application/zip",
+    filename: "steghide.zip"
+  },
+  research: {
+    path: "/files_dashboard/researchLinks.enc.json",
+    mime: "text/plain",
+    filename: "researchLinks.txt"
+  },
+  communications: {
+    path: "/files_dashboard/communications_from_winners.enc.json",
+    mime: "text/plain",
+    filename: "communications_from_winners.txt"
   }
-  }
+};
 
-if (type === 'images') {
+async function openFile(type) {
+  const config = FILE_CONFIG[type];
+  if (!config) return;
+
   try {
     const password = sessionStorage.getItem("cig_pass");
     if (!password) throw new Error("NO SESSION KEY");
 
-    const res = await fetch("/files_dashboard/group_codemind.enc.json");
+    const res = await fetch(config.path);
     const encJson = await res.json();
 
     const decryptedBuffer = await decryptFile(encJson, password);
 
-    // Create downloadable JPEG blob
     const blob = new Blob([decryptedBuffer], {
-      type: "image/jpeg"
+      type: config.mime
     });
 
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "group_codemind_embeded.jpg";
+    a.download = config.filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -421,7 +430,6 @@ if (type === 'images') {
     content.textContent =
       "Archive integrity check failed.\n\n>> PASSWORD INVALID OR FILE CORRUPTED";
   }
-}
 }
 function closeModal(){
   modal.style.display='none';
