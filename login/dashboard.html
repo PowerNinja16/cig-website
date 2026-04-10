@@ -268,7 +268,6 @@ if (sessionStorage.getItem('cig_auth') !== 'true') {
 }
 
 </script>
-``
 <body>
 <div class="dashboard-layout">
   <!-- SIDEBAR -->
@@ -331,30 +330,11 @@ if (sessionStorage.getItem('cig_auth') !== 'true') {
           <div class="file-note">Internal correspondence — restricted circulation</div>
         </div>
 
-        <div class="file-card" onclick="openFile('bank')">
-          <div class="file-type">FINANCE</div>
-          <div class="file-name">cig_accounts_2024.pdf</div>
-          <div class="file-note">Off-ledger transfers and shell routing</div>
-        </div>
-
         <div class="file-card" onclick="openFile('images')">
           <div class="file-type">IMAGES</div>
           <div class="file-name">prototype_photos.zip</div>
           <div class="file-note">Hardware R&D snapshots</div>
         </div>
-
-        <div class="file-card" onclick="openFile('audio')">
-          <div class="file-type">AUDIO</div>
-          <div class="file-name">challenge_winner_audio.wav</div>
-          <div class="file-note">Recovered submission — integrity degraded</div>
-        </div>
-
-        <div class="file-card" onclick="openFile('text')">
-          <div class="file-type">TEXT</div>
-          <div class="file-name">the answer is right in front of you.txt</div>
-          <div class="file-note">Unindexed analysis artifact</div>
-        </div>
-
       </div>
     </div>
   </div>
@@ -374,45 +354,47 @@ const title = document.getElementById('modal-title');
 const content = document.getElementById('modal-content');
 
 async function openFile(type){
-  modal.style.display='flex';
 
   if(type==='email'){
-    title.textContent='BOARD THREAD — INTERNAL';
-    content.textContent=
-`Dana,
+try {
+    const password = sessionStorage.getItem("cig_pass");
+    if (!password) throw new Error("NO SESSION KEY");
 
-OMEGA throughput is exceeding projection again.
-The last challenge winner shows abnormal cognitive pattern persistence.
+    const res = await fetch("/files_dashboard/email.enc.json");
+    const encJson = await res.json();
 
-Legal is asking questions.
-Security says it's "within tolerance".
+    const decryptedBuffer = await decryptFile(encJson, password);
 
-We need more submissions.
-We need less noise.
+    // Create downloadable PNG blob
+    const blob = new Blob([decryptedBuffer], {
+      type: "image/png"
+    });
 
-— Obscura`;
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "email.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
+
+  } catch (e) {
+    modal.style.display = "flex";
+    title.textContent = "DECRYPTION FAILURE";
+    content.textContent =
+      "Archive integrity check failed.\n\n>> PASSWORD INVALID OR FILE CORRUPTED";
   }
-
-  if(type==='bank'){
-    title.textContent='FINANCIAL STATEMENT — REDACTED';
-    content.textContent=
-`TRANSFER LOG — Q3
-----------------------
-• $4.2M → Helix Consulting (Cayman)
-• $1.9M → Obscura Holdings
-• $7.6M → [REDACTED NODE MAINTENANCE]
-• $12.4M → MEDICAL EQUIPMENT PROCUREMENT
-
-Audit status: BYPASSED`;
   }
-
 
 if (type === 'images') {
   try {
     const password = sessionStorage.getItem("cig_pass");
     if (!password) throw new Error("NO SESSION KEY");
 
-    const res = await fetch("/files_dashboard/secret.enc.json");
+    const res = await fetch("/files_dashboard/group_codemind.enc.json");
     const encJson = await res.json();
 
     const decryptedBuffer = await decryptFile(encJson, password);
@@ -422,10 +404,8 @@ if (type === 'images') {
       type: "image/jpeg"
     });
 
-    // ✅ THIS LINE WAS MISSING
     const url = URL.createObjectURL(blob);
 
-    // ✅ CREATE <a> BEFORE USING IT
     const a = document.createElement("a");
     a.href = url;
     a.download = "group_codemind_embeded.jpg";
@@ -442,29 +422,7 @@ if (type === 'images') {
       "Archive integrity check failed.\n\n>> PASSWORD INVALID OR FILE CORRUPTED";
   }
 }
-
-
-  if(type==='audio'){
-    title.textContent='AUDIO LOG';
-    content.textContent=
-`Spectral irregularities detected.
-Recommend frequency-domain inspection.
-
-Tag:
-"winner — challenge audio"`;
-  }
-
-  if(type==='text'){
-    title.textContent='TEXT FILE';
-    content.textContent=
-`XJQT LFMZ RQWB P OIT YB MHV
-SIUZ UDYU CHPK GMWU TIMJ
-
-NOTE:
-Use the letter after the given one.`;
-  }
 }
-
 function closeModal(){
   modal.style.display='none';
 }
@@ -511,6 +469,6 @@ async function decryptFile(encJson, password) {
     encrypted
   );
 
-  return new TextDecoder().decode(decrypted);
+  return decrypted;
 }
 </script>
