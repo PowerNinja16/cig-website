@@ -269,7 +269,10 @@ if (sessionStorage.getItem('cig_auth') !== 'true') {
 
 </script>
 <body>
-<div class="dashboard-layout">
+
+  <audio id="login-music" loop></audio>
+
+  <div class="dashboard-layout">
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="brand">CIG INTERNAL</div>
@@ -362,6 +365,26 @@ if (sessionStorage.getItem('cig_auth') !== 'true') {
       <button class="close-btn" onclick="closeModal()">Close</button>
     </div>
 </div>
+
+<!-- MUSIC script --> 
+<script>
+window.addEventListener('load', () => {
+  const music = document.getElementById('login-music');
+
+  // Attempt autoplay
+  const playPromise = music.play();
+
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      // Fallback: wait for any user interaction
+      document.addEventListener('click', () => {
+        music.play();
+      }, { once: true });
+    });
+  }
+});
+</script>
+
 
 <script>
 const modal = document.getElementById('modal'); 
@@ -479,4 +502,35 @@ async function decryptFile(encJson, password) {
 
   return decrypted;
 }
+</script>
+
+<script>
+async function playEncryptedMusic() {
+  const password = sessionStorage.getItem("cig_pass");
+  if (!password) return;
+
+  const res = await fetch("files_dashboard/LoginSong.enc.json");
+  const encJson = await res.json();
+
+  const decryptedBuffer = await decryptFile(encJson, password);
+
+  const blob = new Blob([decryptedBuffer], {
+    type: "audio/mpeg"
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const audio = document.getElementById("login-music");
+  audio.src = url;
+  audio.volume = 0.1;
+
+  audio.play().catch(() => {
+    // autoplay blocked → wait for user interaction
+    document.addEventListener("click", () => audio.play(), { once: true });
+  });
+}
+</script>
+
+<script>
+window.addEventListener("load", playEncryptedMusic);
 </script>
